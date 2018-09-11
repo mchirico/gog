@@ -20,6 +20,17 @@ func (a *App) Initilize() {
 	a.initializeRoutes()
 }
 
+func (a *App) initializeRoutes() {
+	a.Router.HandleFunc("/", a.getRoot).Methods("GET")
+	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
+	// a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
+
+}
+
+func (a *App) Run(addr string) {
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", addr), a.Router))
+}
+
 func (a *App) getRoot(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("get Root")
@@ -28,10 +39,8 @@ func (a *App) getRoot(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-
 	respondWithJSON(w, http.StatusOK, products)
 }
-
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
 
@@ -54,17 +63,4 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
-}
-
-func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s",addr), a.Router))
-}
-
-
-func (a *App) initializeRoutes() {
-	a.Router.HandleFunc("/", a.getRoot).Methods("GET")
-	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
-
-	// a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
-
 }
