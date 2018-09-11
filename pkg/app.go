@@ -20,6 +20,19 @@ func (a *App) Initilize() {
 	a.initializeRoutes()
 }
 
+func (a *App) getRoot(w http.ResponseWriter, r *http.Request) {
+
+	log.Printf("get Root")
+	products, err := getRoot(a.DB, 0, 5)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, products)
+}
+
+
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
 
 	products, err := getProducts(a.DB, 0, 5)
@@ -49,7 +62,9 @@ func (a *App) Run(addr string) {
 
 
 func (a *App) initializeRoutes() {
+	a.Router.HandleFunc("/", a.getRoot).Methods("GET")
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
+
 	// a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
 
 }

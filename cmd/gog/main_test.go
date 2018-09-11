@@ -31,6 +31,20 @@ func TestEmptyProducts(t *testing.T) {
 	}
 }
 
+
+func TestRoot(t *testing.T) {
+
+	req, _ := http.NewRequest("GET", "/", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+
+	if body := response.Body.String(); body !=
+		`[{"page":1,"fruits":["pear","orange"]},{"page":2,"fruits":["pear","orange"]}]` {
+		t.Errorf("Expected an array. Got %s", body)
+	}
+}
+
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 	a.Router.ServeHTTP(rr, req)
