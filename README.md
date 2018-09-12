@@ -17,6 +17,7 @@ go get -u github.com/mchirico/gog
 Here's an example of a very simple RPC server. You'll need
 to download [books.json](https://raw.githubusercontent.com/mchirico/mchirico.github.io/master/p/books.json)
 
+[Reference: Building RESTFul Web Services with Go](http://my.safaribooksonline.com/book/web-development/9781788294287)
 
 ## Server
 
