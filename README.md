@@ -8,6 +8,8 @@ Go Gorilla Mux -- My Template
 
 ```bash
 go get -u github.com/gorilla/mux
+go get -u github.com/gorilla/rpc
+
 go get -u github.com/mchirico/gog
 
 ```
