@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 type App struct {
@@ -30,8 +31,16 @@ func (a *App) initializeRoutes() {
 
 }
 
-func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", addr), a.Router))
+func (a *App) Run(addr string, writeTimeout int, readTimeout int) {
+
+	srv := &http.Server{
+		Handler: a.Router,
+		Addr:    fmt.Sprintf(":%s", addr),
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: time.Duration(writeTimeout) * time.Second,
+		ReadTimeout:  time.Duration(readTimeout) * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }
 
 func (a *App) getRoot(w http.ResponseWriter, r *http.Request) {

@@ -3,12 +3,14 @@ package rpkg
 import (
 	"database/sql"
 	jsonparse "encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/rpc"
 	"github.com/gorilla/rpc/json"
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 type App struct {
@@ -79,6 +81,15 @@ func (a *App) Initilize() {
 
 }
 
-func (a *App) Run(port string) {
-	http.ListenAndServe(port, a.Router)
+func (a *App) Run(addr string, writeTimeout int, readTimeout int) {
+
+	srv := &http.Server{
+		Handler: a.Router,
+		Addr:    fmt.Sprintf(":%s", addr),
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: time.Duration(writeTimeout) * time.Second,
+		ReadTimeout:  time.Duration(readTimeout) * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }
+
