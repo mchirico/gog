@@ -1,10 +1,12 @@
 package pkg
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"io"
 	"log"
 	"net/http"
 )
@@ -23,6 +25,7 @@ func (a *App) Initilize() {
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", a.getRoot).Methods("GET")
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
+	a.Router.HandleFunc("/upload", a.receiveFile).Methods("POST")
 	// a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
 
 }
@@ -40,6 +43,31 @@ func (a *App) getRoot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJSON(w, http.StatusOK, products)
+}
+
+func (a *App) receiveFile(w http.ResponseWriter, r *http.Request) {
+	var Buf bytes.Buffer
+	// in your case file would be fileupload
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	fmt.Printf("File name %s\n", header.Filename)
+	// Copy the file data to my buffer
+	io.Copy(&Buf, file)
+	// do something with the contents...
+	// I normally have a struct defined and unmarshal into a struct, but this will
+	// work as an example
+	contents := Buf.String()
+	fmt.Println(contents)
+	// I reset the buffer in case I want to use it again
+	// reduces memory allocations in more intense projects
+	Buf.Reset()
+	// do something else
+	// etc write header
+	return
 }
 
 func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
