@@ -8,9 +8,44 @@ Go Gorilla Mux -- My Template
 
 ```bash
 go get -u github.com/gorilla/mux
+go get -u github.com/gorilla/rpc
+go get -u github.com/levigross/grequests
+
 go get -u github.com/mchirico/gog
 
 ```
+
+## Upload File
+
+```go
+package main
+
+import (
+	"github.com/levigross/grequests"
+	"log"
+)
+
+func main() {
+
+	fd, err := grequests.FileUploadFromDisk("./books.json")
+	resp, err := grequests.Post("http://localhost:8080/upload",
+		&grequests.RequestOptions{
+			Files: fd,
+			Data:  map[string]string{"One": "Two"},
+		})
+
+	if err != nil {
+		log.Println("Unable to make request", resp.Error)
+	}
+
+	log.Println(resp.String())
+}
+
+
+```
+
+
+
 
 ## Example
 
