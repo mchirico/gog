@@ -11,6 +11,7 @@ matrix:
     - linux
     install:
     - go get github.com/gorilla/mux
+    - go get github.com/gorilla/rpc
     before_install:
     - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
       > ./cc-test-reporter
@@ -18,8 +19,9 @@ matrix:
     - "./cc-test-reporter before-build"
     script:
     - go test -race -v -coverprofile=c0.out github.com/mchirico/gog/cmd/gog
+    - go test -race -v -coverprofile=c1.out github.com/mchirico/gog/cmd/grpc    
     after_success:
-    - cat c0.out > c.out
+    - cat c0.out c1.out > c.out
     - bash <(curl -s https://codecov.io/bash)
     - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
 

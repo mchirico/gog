@@ -1,18 +1,19 @@
 package main
 
 import (
-	"github.com/mchirico/gog/pkg"
+	"bytes"
+	"github.com/mchirico/gog/rpkg"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
 )
 
-var a pkg.App
+var a rpkg.App
 
 func TestMain(m *testing.M) {
-	a = pkg.App{}
 
+	a = rpkg.App{}
 	a.Initilize()
 	code := m.Run()
 
@@ -21,26 +22,28 @@ func TestMain(m *testing.M) {
 
 func TestEmptyProducts(t *testing.T) {
 
-	req, _ := http.NewRequest("GET", "/products", nil)
+	body := []byte(`{
+   "method": "JSONServer.GiveBookDetail",
+   "params": [{
+   "Id": "1234"
+   }],
+   "id": "1"
+}`)
+
+	req, _ := http.NewRequest("POST", "/rpc", bytes.NewBuffer(body))
+
+	req.Header.Set("cache-control", "no-cache")
+	req.Header.Set("Content-Type", "application/json")
+
 	response := executeRequest(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	if body := response.Body.String(); body != "[]" {
+	expectedResult := `{"result":{"Id":"1234","Name":"In the sunburned country","Author":"Bill Bryson"},"error":null,"id":"1"}
+`
+
+	if body := response.Body.String(); body != expectedResult {
 		t.Errorf("Expected an empty array. Got %s", body)
-	}
-}
-
-func TestRoot(t *testing.T) {
-
-	req, _ := http.NewRequest("GET", "/", nil)
-	response := executeRequest(req)
-
-	checkResponseCode(t, http.StatusOK, response.Code)
-
-	if body := response.Body.String(); body !=
-		`[{"page":1,"fruits":["pear","orange"]},{"page":2,"fruits":["pear","orange"]}]` {
-		t.Errorf("Expected an array. Got %s", body)
 	}
 }
 
