@@ -7,9 +7,13 @@ Go Gorilla Mux -- My Template
 ## Install
 
 ```bash
+# Dependencies
 go get -u github.com/gorilla/mux
 go get -u github.com/gorilla/rpc
 
-go get -u github.com/mchirico/gog
+# Run Different Examples
+go get -u github.com/mchirico/gog/cmd/gog
+go get -u github.com/mchirico/gog/cmd/grpc
+
 
 ```
