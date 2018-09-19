@@ -11,6 +11,10 @@ Go Gorilla Mux -- My Template
 go get -u github.com/gorilla/mux
 go get -u github.com/gorilla/rpc
 
+#  ... client: (grpc_client)
+go get -u github.com/levigross/grequests
+
+
 # Run Different Examples
 go get -u github.com/mchirico/gog/cmd/gog
 go get -u github.com/mchirico/gog/cmd/grpc
