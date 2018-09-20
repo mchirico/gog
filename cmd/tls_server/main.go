@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 /*
@@ -30,7 +31,20 @@ Example:
 
 func main() {
 
-	caCert, err := ioutil.ReadFile("/Users/mchirico/testCert/cert.pem")
+
+	certFile, ok := os.LookupEnv("certFile")
+	if !ok {
+		certFile = "/Users/mchirico/testCert/cert.pem"
+	}
+
+	keyFile, ok := os.LookupEnv("keyFile")
+	if !ok {
+		keyFile = "/Users/mchirico/testCert/key.pem"
+	}
+
+
+
+	caCert, err := ioutil.ReadFile(certFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -60,8 +74,8 @@ func main() {
 		TLSConfig: tlsConfig,
 	}
 
-	log.Println(httpServer.ListenAndServeTLS("/Users/mchirico/testCert/cert.pem",
-		"/Users/mchirico/testCert/key.pem"))
+	log.Println(httpServer.ListenAndServeTLS(certFile,
+		keyFile))
 
 }
 
