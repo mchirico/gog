@@ -11,7 +11,6 @@ Example:
 
  */
 
-
 import (
 	"crypto/tls"
 	"crypto/x509"
@@ -19,18 +18,30 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
+
+	certFile, ok := os.LookupEnv("certFile")
+	if !ok {
+		certFile = "/Users/mchirico/testCert/cert.pem"
+	}
+
+	keyFile, ok := os.LookupEnv("keyFile")
+	if !ok {
+		keyFile = "/Users/mchirico/testCert/key.pem"
+	}
+
 	// Load our TLS key pair to use for authentication
-	cert, err := tls.LoadX509KeyPair("/Users/mchirico/testCert/cert.pem",
-		"/Users/mchirico/testCert/key.pem")
+	cert, err := tls.LoadX509KeyPair(certFile,
+		keyFile)
 	if err != nil {
 		log.Fatalln("Unable to load cert", err)
 	}
 
 	// Load our CA certificate
-	clientCACert, err := ioutil.ReadFile("/Users/mchirico/testCert/cert.pem")
+	clientCACert, err := ioutil.ReadFile(certFile)
 	if err != nil {
 		log.Fatal("Unable to open cert", err)
 	}
@@ -44,7 +55,6 @@ func main() {
 	}
 
 	tlsConfig.BuildNameToCertificate()
-
 
 	ro := &grequests.RequestOptions{
 		HTTPClient: &http.Client{
