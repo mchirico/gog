@@ -31,7 +31,6 @@ Example:
 
 func main() {
 
-
 	certFile, ok := os.LookupEnv("certFile")
 	if !ok {
 		certFile = "/Users/mchirico/testCert/cert.pem"
@@ -41,8 +40,6 @@ func main() {
 	if !ok {
 		keyFile = "/Users/mchirico/testCert/key.pem"
 	}
-
-
 
 	caCert, err := ioutil.ReadFile(certFile)
 	if err != nil {
