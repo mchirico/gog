@@ -25,6 +25,7 @@ func (a *App) Initilize() {
 
 func (a *App) initializeRoutes() {
 	a.Router.HandleFunc("/", a.getRoot).Methods("GET")
+	a.Router.HandleFunc("/", a.getRoot).Methods("POST")
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
 	a.Router.HandleFunc("/upload", a.receiveFile).Methods("POST")
 	// a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
